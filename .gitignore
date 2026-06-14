@@ -16,6 +16,7 @@ __pycache__/
 *.csv
 *.svg
 !m2xfp_simulator/configs/ppa/*.csv
+!simulator/configs/ppa/*.csv
 
 # Distribution / packaging
 .Python

@@ -1,8 +1,9 @@
 # NVESM2 Simulator
 
 This directory contains the simulation framework for **NVESM2**, adapted from
-the original M2XFP simulator. It models performance, energy, and area for NVESM2
-and the available baselines.
+the original M2XFP simulator. It uses a BitFusion-style mixed-precision
+accelerator model with CACTI-backed SRAM energy modeling. The currently wired
+accelerator configs are `nvesm2`, `ant`, `mant`, and `olive`.
 
 ## 📂 Project Structure
 
@@ -46,7 +47,7 @@ Different accelerators use varying quantization strategies. To ensure a fair com
 ### 2. ISO-Area Hardware Configuration
 The configuration files in `configs/accelerator/` (`conf_*.ini`) define the hardware parameters (Buffer size, PE count, Bandwidth).
 * **Design Principle:** We align configurations based on **ISO-Area** constraints. Lower precision units allow for higher parallelism within the same area budget.
-* **Example:** An 8-bit baseline (e.g., ANT) is configured as a **16x16** systolic array, while a 4-bit accelerator (e.g., NVESM2/NVFP) scales to a **32x32** array.
+* **Example:** An 8-bit baseline (e.g., ANT) is configured as a **16x16** systolic array, while a 4-bit accelerator (e.g., NVESM2) scales to a **32x32** array.
 
 ### 3. Core PPA Data (Energy / Area for PEs)
 
@@ -62,11 +63,10 @@ configs/ppa/systolic_array_synth_nvesm2.csv
 
 To ensure accurate power estimation, we use 45nm synthesis data:
 + NVESM2: `rtl_area_power/vsrc/nvesm2/pe_tile_v/pe_tile_nvfp_fp32.v`
-+ NVFP: `rtl_area_power/vsrc/baselines/nvfp/pe_tile_v/pe_tile_nvfp_fp32.v`
 
 The power of PE
 + Baselines (ANT, OliVe, MANT): Derived from their synthesized 8-bit x 8-bit PE.
-+ NVESM2/NVFP: Derived by synthesizing their FP4 PE tile and normalizing the eight-lane tile to a single PE.
++ NVESM2: Derived by synthesizing its FP4 PE tile and normalizing the eight-lane tile to a single PE.
 
 ## Running the Simulator
 
@@ -74,11 +74,12 @@ How to run:
 ```shell
 python run_simulator.py \
   --models llama3_8b \
-  --accelerators olive,ant,mant,nvesm2,nvfp \
+  --accelerators olive,ant,mant,nvesm2 \
   --normalized-bench olive \
   --batch-size 1
 ```
 
-Aggregated, normalized summary in `results/m2xfp_res.csv`.
+Aggregated, normalized summary is written to the legacy-named
+`results/m2xfp_res.csv`.
 
 This file includes the normalized data of accelerators across several LLMs.

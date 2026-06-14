@@ -206,8 +206,8 @@ def main():
     parser.add_argument(
         "--accelerators",
         type=str,
-        default="olive,ant,mant,microscopiq,m2xfp,nvesm2",
-        help="Comma-separated list of accelerator schemes (e.g., 'olive,ant,mant,microscopiq,m2xfp,nvesm2')."
+        default="olive,ant,mant,nvesm2",
+        help="Comma-separated list of accelerator schemes (e.g., 'olive,ant,mant,nvesm2')."
     )
     parser.add_argument(
         "--batch-size",
